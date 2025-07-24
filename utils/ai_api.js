@@ -10,6 +10,7 @@ app.use(express.json());
 
 app.post('/api/chat', async (req, res) => {
   const messages = req.body.messages;
+  console.log('Received messages:', messages);
 
   try {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -25,6 +26,8 @@ app.post('/api/chat', async (req, res) => {
     });
 
     const data = await response.json();
+    console.log("AI response:", data.choices?.[0]?.message?.content || 'No response from AI');
+    
     
     res.json({ response: data.choices?.[0]?.message?.content || 'No response from AI' });
   } catch (err) {

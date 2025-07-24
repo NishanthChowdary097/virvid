@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ai_api from '../utils/ai_api';
 import ReactMarkdown from 'react-markdown';
+import customFetch from './customFetch';
 // import '../assets/styles/ChatWithDoc.css';
 
 const ChatWithDoc = ({ text, initialPrompt, onClose }) => {
@@ -27,6 +28,7 @@ const ChatWithDoc = ({ text, initialPrompt, onClose }) => {
 
     // Actual messages sent to AI
     const updatedHistoryForAI = [
+      ...contextMessages,
       ...chatHistory,
       { role: 'user', content: `${userVisibleMessage}${appendedInstruction}` }
     ];
@@ -36,7 +38,10 @@ const ChatWithDoc = ({ text, initialPrompt, onClose }) => {
     setInput('');
 
     try {
-      const { response } = await ai_api([...contextMessages, ...updatedHistoryForAI]);
+      const res = await customFetch.post("/chat", {
+        messages: updatedHistoryForAI
+      });
+      const response = res.data.response || 'No response';
       setChatHistory(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (err) {
       console.error('Error getting AI response:', err);
