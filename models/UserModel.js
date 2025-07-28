@@ -1,4 +1,5 @@
 import mongoose, { Mongoose } from "mongoose";
+import { type } from "os";
 
 const UserSchema = new mongoose.Schema({
     name: String,
@@ -13,18 +14,30 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    solved:{
-        type: Array,
-        default: [
-            {
-                contentId: {
-                    type:mongoose.Schema.Types.ObjectId,
-                    ref: 'content'
-                },
-                score: Number,
-            }
-        ]
-    }
+    solved: [
+        {
+            contentId: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'content',
+            },
+            attempts: {
+                type: Number,
+                default: 0,
+            },
+            score: {
+                type: Number,
+                default: 0,
+            },
+            coinsGiven: {
+                type: Boolean,
+                default: false,
+            },
+        }
+    ],
+    wallet: {
+        type: Number,
+        default: 0
+    },
 
 })
 

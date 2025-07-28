@@ -88,6 +88,15 @@ Here is the input text:
 
 export default generateQuiz ;
 
+function calculateCoins(attemptNumber, maxCoins = 100, decayFactor = 0.5, minCoins = 10) {
+  if (attemptNumber < 1) {
+    throw new Error("Attempt number must be at least 1.");
+  }
+
+  const coins = Math.floor(maxCoins * Math.pow(decayFactor, attemptNumber - 1));
+  return Math.max(coins, minCoins);
+}
+
 
 const evaluateQuiz = async (req, res) => {
   const { quizId, submittedAnswers } = req.body;
@@ -122,13 +131,19 @@ const evaluateQuiz = async (req, res) => {
         score++;
       }
     }
-    if(score===5){
-      User.solved.push({
-        contentId: quiz.jobId,
-        score: score
-      });
-      await User.save();
+    let attempt = User.solved.filter(({ contentId }) => contentId?.toString() === quiz.jobId.toString()).length + 1
+      
+    User.solved.push({
+      contentId: quiz.jobId,
+      score: score,
+      attempts: attempt
+    });
+    if (score === 5) {
+      let coins = calculateCoins(attempt);
+      User.wallet = (User.wallet || 0) + coins;
     }
+    await User.save();
+    
     return res.json({
       quizId: quiz._id,
       totalQuestions: correctAnswers.length,
@@ -140,6 +155,7 @@ const evaluateQuiz = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 const getMockQuiz = async (req, res) => {
   const { quizId } = req.params;
