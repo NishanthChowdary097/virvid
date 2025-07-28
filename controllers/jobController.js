@@ -41,17 +41,14 @@ Text:
     return { isClean: false, reason: 'AI moderation error' };
   }
 };
-
 export default checkForExplicitContent;
 
-
-export const textualDatas = async (req, res) => {
+export const addJob = async (req, res) => {
     try {
         const createdBy = req.user.userId;
         const verified = req.user.role === 'legend';
 
         const { topicName, subjectName, standard, video } = req.body;
-
         const job = new Job({
             topicName,
             subjectName,
@@ -60,7 +57,6 @@ export const textualDatas = async (req, res) => {
             createdBy,
             verified
         })
-        
         await job.save();
         req.body.identifier = job._id;
         const job2 = await fileups(req, res);
@@ -90,7 +86,7 @@ export const textualDatas = async (req, res) => {
         res.status(201).json(job2);
     } catch (e) {
         console.error(e);
-        res.status(500).json({ msg: "Edo dobindi" });
+        res.status(500).json({ msg: "Error occurred while adding job. Please try again later." });
     }
 }
 
@@ -175,21 +171,13 @@ export const getAllJobs = async (req, res) => {
 
 
 export const createJob = async (req, res) => {
-    console.log("file log be: ", req.file);
-    console.log("req___________________________________________________: ", req);
     try {
         const createdBy = req.user.userId;
         const verified = req.user.role === 'legend';
-        // const filePath = req.file.path; 
         const tname = req.body.topicName;
-        console.log("tnmae: ", tname);
         const sname = req.body.subjectName;
-        console.log("sname: ", sname);
         const vid = req.body.video;
-        console.log("vid: ", vid);
         const stan = req.body.standard;
-        console.log("stan: ", stan);
-
 
         const job = new Job({
             tname,
@@ -200,10 +188,8 @@ export const createJob = async (req, res) => {
             verified
         });
 
-        // Save the job to the database
         await job.save();
 
-        // Respond with success message
         res.status(201).json(job._id);
     } catch (error) {
         console.error(error);

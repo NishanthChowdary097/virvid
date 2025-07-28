@@ -50,7 +50,7 @@ async function fetchPdfTextFromFile(filePath) {
 
 async function summarizePDF(filePath) {
   const pdfText = await fetchPdfTextFromFile(filePath);
-  console.log("Extracted PDF text:", pdfText.slice(0, 100)); // Log first 100 characters for debugging
+  console.log("Extracted PDF text:", pdfText.slice(0, 100));
 
 
   const prompt = `Please give me a very in depth and detailed summary of the following PDF content:\n\n${pdfText}`;
@@ -59,7 +59,6 @@ async function summarizePDF(filePath) {
 
   const ret = data.response;
 
-  // console.log("Summary:\n\n", ret);
   return { data: data, pdf_text: pdfText, summary: ret };
 }
 
@@ -78,6 +77,3 @@ async function workerTask(taskId, filePath) {
   });
 }
 workerTask(workerData.taskId, workerData.filePath);
-// parentPort.on('message', (data) => {
-//   workerTask(data.taskId,data.filePath);
-// });

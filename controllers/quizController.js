@@ -52,7 +52,6 @@ Here is the input text:
       },
       body: JSON.stringify({
         messages: [
-        //   { role: 'user', content: moderationPrompt },
           { role: 'user', content: quizStructure }
         ]
       })

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import ai_api from '../utils/ai_api';
 import ReactMarkdown from 'react-markdown';
 import customFetch from './customFetch';
-// import '../assets/styles/ChatWithDoc.css';
 
 const ChatWithDoc = ({ text, initialPrompt, onClose }) => {
   const [chatHistory, setChatHistory] = useState([]);
@@ -16,7 +15,6 @@ const ChatWithDoc = ({ text, initialPrompt, onClose }) => {
 
     const userVisibleMessage = input;
     const appendedInstruction = `\n\nOnly respond to questions that are relevant to the topic or document provided. If this is unrelated, reply with: "Please ask questions relevant to the topic or document only."`;
-
     const contextMessages = chatHistory.length === 0
       ? [
           {
@@ -26,14 +24,12 @@ const ChatWithDoc = ({ text, initialPrompt, onClose }) => {
         ]
       : [];
 
-    // Actual messages sent to AI
     const updatedHistoryForAI = [
       ...contextMessages,
       ...chatHistory,
       { role: 'user', content: `${userVisibleMessage}${appendedInstruction}` }
     ];
 
-    // Clean history shown to user
     setChatHistory(prev => [...prev, { role: 'user', content: userVisibleMessage }]);
     setInput('');
 

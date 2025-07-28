@@ -1,4 +1,3 @@
-import React from 'react'
 import { toast } from 'react-toastify';
 import { JobsContainer } from '../components';
 import customFetch from '../components/customFetch';
@@ -10,12 +9,10 @@ export const loader = async({request}) => {
   const params = Object.fromEntries([
     ...new URL(request.url).searchParams.entries()
   ]);
-  // console.log(params);
   try {
     const {data} = await customFetch.get('/jobs',{
       params,
     })
-    // console.log(data,"fghhgfghgf");
     return {data, searchValues:{...params}}
   } catch (error) {
     toast.error(error?.response?.data?.msg)
@@ -32,7 +29,7 @@ const AllJobs = () => {
     <JobsContainer />
   </AllJobsContext.Provider>
 }
-
 export const useAllJobsContext = () => useContext(AllJobsContext)
 
 export default AllJobs
+

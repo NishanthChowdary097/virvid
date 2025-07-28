@@ -4,7 +4,6 @@ import customFetch from '../components/customFetch';
 const LoadingDots = () => (
   <div className="ellipsis-loader"><span>.</span><span>.</span><span>.</span></div>
 );
-
 const QuizModal = ({ jobId, onClose }) => {
   const [questions, setQuestions] = useState([]);
   const [quizId, setQuizId] = useState(null);
@@ -12,13 +11,12 @@ const QuizModal = ({ jobId, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
 
-  const hasFetchedRef = useRef(false); // ✅ used to prevent duplicate fetch
+  const hasFetchedRef = useRef(false);
 
   useEffect(() => {
     const fetchQuiz = async () => {
-      if (hasFetchedRef.current) return; // ✅ prevent duplicate request
+      if (hasFetchedRef.current) return;
       hasFetchedRef.current = true;
-
       try {
         const response = await customFetch.post('/quiz/attempt', { _id: jobId });
         setQuestions(response.data.questions);
@@ -30,7 +28,6 @@ const QuizModal = ({ jobId, onClose }) => {
         setLoading(false);
       }
     };
-
     fetchQuiz();
   }, [jobId]);
 
@@ -59,7 +56,6 @@ const QuizModal = ({ jobId, onClose }) => {
     if (selectedAnswers.includes(null)) {
       return alert('Please answer all questions before submitting.');
     }
-
     try {
       const response = await customFetch.post('/quiz/evaluate', {
         quizId,
@@ -67,12 +63,11 @@ const QuizModal = ({ jobId, onClose }) => {
       });
 
       onClose();
-
       window.dispatchEvent(
         new CustomEvent('quizEvaluated', {
           detail: {
             ...response.data,
-            userAnswers: selectedAnswers, // ✅ include user answers
+            userAnswers: selectedAnswers, 
           }
         })
       );
@@ -85,7 +80,6 @@ const QuizModal = ({ jobId, onClose }) => {
   if (loading) return <LoadingDots />;
 
   const currentQ = questions[currentIndex];
-
   return (
     <div className="quiz-modal" style={{ padding: '1rem' }}>
       <h3>Question {currentIndex + 1} of {questions.length}</h3>
@@ -105,12 +99,10 @@ const QuizModal = ({ jobId, onClose }) => {
           </label>
         ))}
       </form>
-
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '2rem' }}>
         {currentIndex > 0 ? (
           <button className="btn" onClick={handleBack}>Back</button>
         ) : <div />}
-
         {currentIndex < questions.length - 1 ? (
           <button className="btn" style={{ marginLeft: 'auto' }} onClick={handleSave}>Save</button>
         ) : (

@@ -9,3 +9,6 @@ router.route('/evaluate').post(evaluateQuiz)
 router.route('/mock/:quizId').get(getMockQuiz)
 
 export default router;
+
+
+

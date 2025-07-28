@@ -16,7 +16,7 @@ const OpenChat = () => {
   useEffect(() => {
   if (shouldScroll) {
     scrollToBottom();
-    setShouldScroll(false); // reset after scrolling
+    setShouldScroll(false);
   }
 }, [chatHistory]);
 
@@ -38,8 +38,6 @@ const OpenChat = () => {
       });
 
       const aiReply = res.data.response || 'No response';
-
-
       setChatHistory([...updatedHistory, { role: 'assistant', content: aiReply }]);
     } catch (err) {
       console.error('Chat error:', err);
