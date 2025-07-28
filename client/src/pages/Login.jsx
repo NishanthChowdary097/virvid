@@ -1,4 +1,3 @@
-import React from 'react'
 import {Link, Form, redirect, useNavigation} from 'react-router-dom'
 import Wrapper from '../assets/wrappers/RegisterAndLoginPage'
 import { FormRow, SubmitBtn } from '../components'

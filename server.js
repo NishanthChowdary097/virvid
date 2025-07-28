@@ -58,7 +58,6 @@ app.use(cors());
 app.get('/api/v1/test', (req, res) => {
   res.json({msg:'test route'})
 })
-
 app.get('/api/users', async(req, res) => {
   console.log("get userrs");
   let data = await User.find({});
