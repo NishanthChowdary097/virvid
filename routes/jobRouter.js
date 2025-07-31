@@ -9,7 +9,7 @@ import {
     updateJob,
     deleteJob,
     showStats,
-    textualDatas,
+    addJob,
     fileups
 } from '../controllers/jobController.js'
 import { validateJobInput,  validateIdParam} from '../middleware/validationMiddleware.js'
@@ -19,7 +19,7 @@ import upload from '../middleware/multerMiddleware.js'
 
 router.route('/').get(getAllJobs)
 router.route('/add-summary').post(addSummary);
-router.route('/').post(upload.single('file'),textualDatas)
+router.route('/').post(upload.single('file'),addJob)
 router.route('/files').post(upload.single('file'), fileups);
 
 router.route('/stats').get([
@@ -29,7 +29,7 @@ router.route('/stats').get([
 
 router
 .route('/:id')
-.get(validateIdParam, getJob)
+.get( getJob)
 .patch(validateIdParam, updateJob)
 .delete(validateIdParam, deleteJob)
 

@@ -4,7 +4,7 @@ import customFetch from '../components/customFetch';
 const LoadingDots = () => (
   <div className="ellipsis-loader"><span>.</span><span>.</span><span>.</span></div>
 );
-const QuizModal = ({ jobId, onClose }) => {
+const QuizModal = ({ jobId, onClose, attemptNumber = 1 }) => {
   const [questions, setQuestions] = useState([]);
   const [quizId, setQuizId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,6 +60,7 @@ const QuizModal = ({ jobId, onClose }) => {
       const response = await customFetch.post('/quiz/evaluate', {
         quizId,
         submittedAnswers: selectedAnswers,
+        attemptNumber
       });
 
       onClose();
@@ -87,13 +88,14 @@ const QuizModal = ({ jobId, onClose }) => {
 
       <form>
         {currentQ.options.map((option, idx) => (
-          <label key={idx} style={{ display: 'block', margin: '8px 0' }}>
+          <label key={`q${currentIndex}-opt${idx}`} style={{ display: 'block', margin: '8px 0', cursor: 'pointer' }}>
             <input
               type="radio"
-              name={`q-${currentIndex}`}
-              value={option[0].toLowerCase()}
-              checked={selectedAnswers[currentIndex] === option[0].toLowerCase()}
+              name={`question-${currentIndex}`}
+              value={idx.toString()}
+              checked={selectedAnswers[currentIndex] === idx.toString()}
               onChange={handleOptionChange}
+              style={{ marginRight: '8px' }}
             />
             {option}
           </label>

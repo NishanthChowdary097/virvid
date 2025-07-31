@@ -88,13 +88,15 @@ Here is the input text:
 
 export default generateQuiz ;
 
-function calculateCoins(attemptNumber, maxCoins = 100, decayFactor = 0.5, minCoins = 10) {
+function calculateCoins(attemptNumber, baseCoins = 45) {
   if (attemptNumber < 1) {
     throw new Error("Attempt number must be at least 1.");
   }
 
-  const coins = Math.floor(maxCoins * Math.pow(decayFactor, attemptNumber - 1));
-  return Math.max(coins, minCoins);
+  // 7% reduction per attempt after the first
+  const reductionPercentage = (attemptNumber - 1) * 7;
+  const reductionFactor = Math.max(0, 100 - reductionPercentage) / 100;
+  return Math.floor(baseCoins * reductionFactor);
 }
 
 
@@ -127,7 +129,11 @@ const evaluateQuiz = async (req, res) => {
 
     let score = 0;
     for (let i = 0; i < correctAnswers.length; i++) {
-      if (submittedAnswers[i]?.toLowerCase() === correctAnswers[i]?.toLowerCase()) {
+      // Convert submitted index to letter (0->a, 1->b, 2->c, 3->d)
+      const submittedIndex = parseInt(submittedAnswers[i]);
+      const submittedLetter = String.fromCharCode(97 + submittedIndex); // 97 is 'a' in ASCII
+      
+      if (submittedLetter === correctAnswers[i]?.toLowerCase()) {
         score++;
       }
     }
@@ -138,9 +144,11 @@ const evaluateQuiz = async (req, res) => {
       score: score,
       attempts: attempt
     });
+    
+    let coinsEarned = 0;
     if (score === 5) {
-      let coins = calculateCoins(attempt);
-      User.wallet = (User.wallet || 0) + coins;
+      coinsEarned = calculateCoins(attempt);
+      User.wallet = (User.wallet || 0) + coinsEarned;
     }
     await User.save();
     
@@ -148,7 +156,9 @@ const evaluateQuiz = async (req, res) => {
       quizId: quiz._id,
       totalQuestions: correctAnswers.length,
       correctAnswers: score,
-      scorePercentage: Math.round((score / correctAnswers.length) * 100)
+      scorePercentage: Math.round((score / correctAnswers.length) * 100),
+      coinsEarned: coinsEarned,
+      attemptNumber: attempt
     });
   } catch (error) {
     console.error('Error evaluating quiz:', error);

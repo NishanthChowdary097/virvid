@@ -14,7 +14,8 @@ import {
   Admin,
   Issues,
   Messages,
-  OpenChat
+  OpenChat,
+  JobDetailPage
 } from './pages'
 
 import { action as registerAction } from './pages/Register'
@@ -118,6 +119,10 @@ const router = createBrowserRouter([
           {
             path: 'chat',
             element: <OpenChat />
+          },
+          {
+            path: 'job-detail/:id',
+            element: <JobDetailPage />
           }
         ]
       },

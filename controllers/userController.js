@@ -51,33 +51,47 @@ export const updateUser = async (req, res) => {
 }
 
 export const downloadPDF = async (req, res) => {
-    console.log("hello")
+    console.log("hello: ", req.user)
+    const role = req.user.role;
     const userId = req.user.userId;
     const user = await User.findById(userId);
     const fileID = req.params.fileId;
     const file = await Contents.findById(fileID);
-    const cost = file.cost || 110;
+    const cost = 30; // Fixed cost of 30 coins for PDF download
+    
     if (!user) {
         return res.status(StatusCodes.NOT_FOUND).json({ error: 'User not found' });
     }
     if (!file) {
         return res.status(StatusCodes.NOT_FOUND).json({ error: 'File not found' });
     }
-    if(user.wallet<cost){
-        return res.status(StatusCodes.FORBIDDEN).json({ error: 'Insufficient wallet balance to download file, "Learn more to Earn More"' });
-    }
-    user.wallet -= cost;
-    console.log("File to download:", file.file);
-    user.save().then(
-        res.sendFile(__dirname+"/"+file.file, (err) => {
-        if (err) {
-            console.error('File download error:', err);
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Error downloading file');
-        } else {
-            console.log('File downloaded successfully');
+    
+    // Only check wallet balance and deduct coins for 'user' role
+    if (role === 'user') {
+        if(user.wallet < cost){
+            return res.status(StatusCodes.FORBIDDEN).json({ error: 'Insufficient wallet balance to download file, "Learn more to Earn More"' });
         }
-        })
-    ).catch(err => {
+        user.wallet -= cost;
+        console.log(`User role: coins deducted. New balance: ${user.wallet}`);
+    } else {
+        console.log(`${role} role: free download, no coins deducted`);
+    }
+    
+    console.log("File to download:", file.file);
+    
+    // Save user data only if wallet was modified (for user role)
+    const savePromise = role === 'user' ? user.save() : Promise.resolve();
+    
+    savePromise.then(() => {
+        res.sendFile(__dirname+"/"+file.file, (err) => {
+            if (err) {
+                console.error('File download error:', err);
+                res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Error downloading file');
+            } else {
+                console.log('File downloaded successfully');
+            }
+        });
+    }).catch(err => {
         console.error('Error saving user wallet:', err);
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Error processing download' });
     });

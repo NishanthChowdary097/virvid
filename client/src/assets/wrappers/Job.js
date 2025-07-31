@@ -3,9 +3,11 @@ import styled from 'styled-components';
 const Wrapper = styled.article`
   background: var(--background-secondary-color);
   border-radius: var(--border-radius);
-  display: grid;
-  grid-template-rows: auto 1fr; /* Allow content to expand */
+  display: block;
   box-shadow: var(--shadow-2);
+  width: 100%;
+  contain: layout style paint; /* CSS containment to isolate this element */
+  margin-bottom: 2rem;
   
   header {
     padding: 1rem 1.5rem;
@@ -13,7 +15,6 @@ const Wrapper = styled.article`
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
-    height: auto; /* Ensure the header has a dynamic height */
   }
 
   .main-icon {
@@ -47,11 +48,6 @@ const Wrapper = styled.article`
 
   .content {
     padding: 1rem 1.5rem;
-    overflow: hidden; /* Ensure the content doesn't overflow when expanding */
-    transition: max-height 0.3s ease-out;
-    max-height: 400px; /* Initially setting max-height for content */
-    display: flex;
-    flex-direction: column;
   }
 
   .content-center {
@@ -87,6 +83,8 @@ const Wrapper = styled.article`
     margin-top: 1rem;
     display: flex;
     align-items: center;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--grey-100);
   }
 
   .edit-btn,

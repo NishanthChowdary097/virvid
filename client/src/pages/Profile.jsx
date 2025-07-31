@@ -1,7 +1,7 @@
 import React from 'react';
 import Wrapper from '../assets/wrappers/Profile';
 import { useOutletContext, Form, redirect } from 'react-router-dom';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaCoins } from 'react-icons/fa';
 import customFetch from '../components/customFetch';
 import { toast } from 'react-toastify';
 import { FormRow, SubmitBtn } from '../components';
@@ -31,7 +31,7 @@ export const action = async ({ request }) => {
 // Profile component
 const Profile = () => {
   const { user } = useOutletContext();
-  const { name, email, role, standard } = user;
+  const { name, email, role, standard, wallet } = user;
 
   return (
     <Wrapper>
@@ -41,12 +41,12 @@ const Profile = () => {
           <div className="icon-wrapper">
             <FaUserCircle size={64} className="profile-avatar" />
           </div>
-          <h2 className="profile-title">Your Profile</h2>
+          <h2 className="profile-title">Profile</h2>
           <div className="info-grid">
             <p><strong>Name:</strong> {name}</p>
             <p><strong>Email:</strong> {email}</p>
-            <p><strong>Role:</strong> {role}</p>
             <p><strong>Standard:</strong> {standard === 0 ? 'Teacher' : standard}</p>
+            {role === 'user' && <p><strong>Points:</strong> {wallet || 0}</p>}
           </div>
         </div>
 

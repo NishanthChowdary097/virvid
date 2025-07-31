@@ -7,6 +7,8 @@ const Wrapper = styled.nav`
   justify-content: center;
   box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
   background: var(--background-secondary-color);
+  position: relative;
+  z-index: 1000; /* High z-index to stay above other content */
   .nav-center {
     display: flex;
     width: 90vw;
@@ -37,6 +39,7 @@ const Wrapper = styled.nav`
   @media (min-width: 992px) {
     position: sticky;
     top: 0;
+    z-index: 1000; /* Ensure it stays above content when sticky */
     .nav-center {
       width: 90%;
     }

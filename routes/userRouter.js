@@ -12,7 +12,7 @@ router.get('/admin/app-stats', [
 ])
 router.patch('/update-user', updateUser)
 
-router.get('/download/:fileId', authorizePermissions('user'), downloadPDF);
+router.get('/download/:fileId', downloadPDF);
 
 
 export default router;

@@ -57,6 +57,16 @@ const Wrapper = styled.section`
     color: #4b5563;
   }
 
+  .points-value {
+    color: #3f015c;
+    font-weight: bold;
+    font-size: 1.1rem;
+    padding: 0.2rem 0.5rem;
+    background-color: #f3e8ff;
+    border-radius: 4px;
+    border: 1px solid #e4c7f7;
+  }
+
   .form-card {
     margin-top: 1rem;
   }

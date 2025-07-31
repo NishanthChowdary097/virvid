@@ -33,7 +33,7 @@ const Admin = () => {
         <h3 style={{marginBottom: '20px'}}>Tasks</h3>
         <StatItem title='verified' count={verifiedJobs} color='#129c20' bcg='#b1f3b8' icon={<FaCheckCircle />} />
         <br></br>
-        <StatItem title='pending' count={unverifiedJobs} color='#e82020' bcg='#faa7a7' icon={<FaExclamationTriangle />} />
+        <StatItem title='flagged' count={unverifiedJobs} color='#e82020' bcg='#faa7a7' icon={<FaExclamationTriangle />} />
       </div>
     </Wrapper>
 
